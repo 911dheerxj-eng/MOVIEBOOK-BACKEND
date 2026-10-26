@@ -1,7 +1,7 @@
 
 import { User } from "../auth/auth.model.js";
-import { Movies } from "../Movies/movie.model.js";
-import { Tickets } from "../Tickets/ticket.model.js";
+import { Movies } from "../movies/movie.model.js";
+import { Tickets } from "../tickets/ticket.model.js";
 
 
 

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Movies } from "../Movies/movie.model.js";
+import { Movies } from "./movie.model.js";
 
 
 
