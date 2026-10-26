@@ -24,14 +24,13 @@ export const getMovieController = async (req, res) => {
 
 
 export const deleteMovieController = async (req, res) => {
-    const { id } = req.params
-    const movies = await deleteMovieService({ id })
-    res.json({
-        status: "ok",
-        movies: movies
-    })
-}
-
+    try {
+        await deleteMovieService(req.params.id);
+        res.json({ status: "ok" });
+    } catch (err) {
+        res.status(500).json({ status: "error", message: err.message });
+    }
+};
 
 
 export const updateMovieController = async (req, res) => {
