@@ -32,7 +32,7 @@ export const loginService = async (data) => {
         email: data.email,        
     })
     if (!user) {
-        return null;
+        return null;n
     }
     const result = await bcrypt.compare(data.password,user.password);
     if(result==true){

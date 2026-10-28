@@ -22,7 +22,6 @@ app.use("/movie-cast", movieCastRouter);
 app.use("/ticket", ticketRouter);
 app.use("/auth", authRouter);
 app.use("/admin", adminRouter);
- 
 
 connectDb();
 
