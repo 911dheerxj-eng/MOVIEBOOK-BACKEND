@@ -1,36 +1,44 @@
 import mongoose, { Types } from "mongoose";
 
-const ticketSchema =new  mongoose.Schema({
- 
-    phone_number:{
-        type:String,
-        required:true
+const ticketSchema = new mongoose.Schema({
+    name: {
+        type: String,
     },
-    no_of_tickets:{
-        type:Number,
-        required:true
+    email: {
+        type: String,
     },
-    showDate:{
-        type:Date,
-        required:true
+    phone_number: {
+        type: String,
+        required: true
     },
-    showTime:{
-        type:String,
-        required:true
+    no_of_tickets: {
+        type: Number,
+        required: true
     },
-    movieId:{
-        type:Types.ObjectId,
-        ref:"movies",
-        requried:true
+    showDate: {
+        type: Date,
+        required: true
     },
-    userId:{
-        type:Types.ObjectId,
-        ref:"user",
-        requried:true
+    showTime: {
+        type: String,
+        required: true
+    },
+    movieId: {
+        type: Types.ObjectId,
+        ref: "movies",
+        required: true
+    },
+    userId: {
+        type: Types.ObjectId,
+        ref: "user",
+        required: true
+    },
+    status: {
+        type: String,
+        default: "booked"
     }
-    
-},{
-    timestamps:true
+}, {
+    timestamps: true
 })
 
-export const Tickets = mongoose.models.tickets|| mongoose.model("tickets",ticketSchema)
+export const Tickets = mongoose.models.tickets || mongoose.model("tickets", ticketSchema)

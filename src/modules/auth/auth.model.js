@@ -14,6 +14,16 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    // Password reset ka hashed token yahan save hoga
+    resetPasswordToken: {
+        type: String,
+        default: null,
+    },
+    // Token kab expire hoga, uska time yahan save hoga
+    resetPasswordExpires: {
+        type: Date,
+        default: null,
+    },
     role: {
         type: String,
         enum: ["user", "admin"],
@@ -23,4 +33,6 @@ const userSchema = new mongoose.Schema({
 }, {
     timestamps: true
 })
-export const User = mongoose.model("user", userSchema)
+
+userSchema.index({ email: 1 }, { unique: true })
+export const User = mongoose.models.user || mongoose.model("user", userSchema)

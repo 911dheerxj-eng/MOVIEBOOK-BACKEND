@@ -1,4 +1,5 @@
 import mongoose, { Types } from "mongoose";
+import Razorpay from "razorpay";
 import { Tickets } from "./ticket.model.js";
 
 
@@ -14,23 +15,21 @@ export const createTicketService = async (data) => {
         userId: data.userId,
         status: "booked"
     };
-    const result = await Tickets.insertOne(ticket);
-    return {
-        ...ticket,
-        _id: result.insertedId
-    };
+    const result = await Tickets.create(ticket);
+    return result;
 };
 
 
 export const cancelTicketService = async (ticketId) => {
-    const result = await Tickets.deleteOne(
-            { _id: new mongoose.Types.ObjectId(ticketId) },
-            {
-                $set: {
-                    status: "cancelled"
-                }
+    const result = await Tickets.findByIdAndUpdate(
+        ticketId,
+        {
+            $set: {
+                status: "cancelled"
             }
-        );
+        },
+        { new: true }
+    );
     return result;
 };
 
@@ -53,4 +52,23 @@ return tickets;
     .populate("movieId", "name");
 
   return tickets;
+};
+
+
+
+
+export const createRazorPayService = async (data) => {
+  const razorpay = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET,
+  });
+
+  const options = {
+    amount: Math.round(data.amount * 100), // paise mein convert karo
+    currency: data.currency || "INR",
+    receipt: `receipt_${Date.now()}`,
+  };
+
+  const order = await razorpay.orders.create(options);
+  return order;
 };
