@@ -94,6 +94,12 @@ export const forgotPasswordService = async (email) => {
     resetPasswordExpires: expiryTime,
   });
 
+  // Email credentials check karo — agar set nahi hain toh error dena
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    console.error("EMAIL_USER or EMAIL_PASS not configured in environment variables");
+    throw new Error("Email service is not configured. Please contact support.");
+  }
+
   // Gmail ke through email bhejne ka setup
   const transporter = nodemailer.createTransport({
     service: "gmail",
