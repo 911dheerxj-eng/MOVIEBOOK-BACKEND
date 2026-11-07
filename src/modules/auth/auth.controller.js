@@ -92,7 +92,8 @@ export const forgotPasswordController = async (req, res) => {
     console.error("Forgot password error:", error);
 
     return res.status(500).json({
-      message: "Unable to process request. Please try again later.",
+      message: error.message || "Unable to process request. Please try again later.",
+      error: error.message
     });
   }
 };
