@@ -74,24 +74,10 @@ export const createRazorPayService = async (data) => {
 };
 
 export const verifyRazorpayPaymentService = async (data) => {
-    console.log(data);
-      const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = data;
-
-  const sign = razorpay_order_id + "|" + razorpay_payment_id;
-  const expectedSign = crypto
-    .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
-    .update(sign.toString())
-    .digest("hex");
-    console.log(expectedSign);
-    console.log(razorpay_signature);
+   
+   
+   
     
 
-  if (razorpay_signature === expectedSign) {
-    console.log("Payement Verified");
-
-    return true;
-  } else {
-    console.log("Payement failed");
-    return false
-  }
+  
  }

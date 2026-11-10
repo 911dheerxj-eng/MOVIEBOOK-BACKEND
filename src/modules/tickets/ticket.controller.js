@@ -1,5 +1,6 @@
 import { createTicketService, cancelTicketService, getAllTicketsService, getAllAdminTicketsService, createRazorPayService, verifyRazorpayPaymentService } from "./ticket.service.js";
 
+import crypto from "crypto"
 export const createTicketController = async (req, res) => {
   try {
     const ticket = await createTicketService({
@@ -125,6 +126,7 @@ export const verifyRazorpayConroller=async(req,res)=>{
       !crypto.timingSafeEqual(receivedSignature, expectedSignature)
     ) {
       return res.status(400).json({
+        status:false,
         message: "Invalid Razorpay signature",
       });
     }
@@ -132,9 +134,9 @@ export const verifyRazorpayConroller=async(req,res)=>{
     // Parse body only after signature verification
     
 
-    console.log("Razorpay Webhook Event:", req.body.event);
-    const response = await verifyRazorpayPaymentService(req.body)
-    res.send(response)
+    // console.log("Razorpay Webhook Event:", req.body.event);
+    // const response = await verifyRazorpayPaymentService(req.body)
+    res.send({status:true})
   } catch (error) {
      console.log("RAZORPAY ERROR:", error);
     res.status(500).json({
