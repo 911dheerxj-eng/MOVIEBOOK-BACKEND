@@ -115,7 +115,7 @@ export const verifyRazorpayConroller=async(req,res)=>{
     // Generate expected signature
     const expectedSignature = crypto
       .createHmac("sha256", webhookSecret)
-      .update(req.body)
+      .update(Buffer.from(req.body))
       .digest();
 
     // Compare signatures safely
