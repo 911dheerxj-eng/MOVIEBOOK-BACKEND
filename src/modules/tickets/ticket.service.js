@@ -1,7 +1,7 @@
 import mongoose, { Types } from "mongoose";
 import Razorpay from "razorpay";
 import { Tickets } from "./ticket.model.js";
-
+import crypto from "crypto"
 
 export const createTicketService = async (data) => {
     const ticket = {
