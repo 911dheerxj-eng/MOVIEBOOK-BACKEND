@@ -1,4 +1,4 @@
-import { createTicketService, cancelTicketService, getAllTicketsService, getAllAdminTicketsService, createRazorPayService } from "./ticket.service.js";
+import { createTicketService, cancelTicketService, getAllTicketsService, getAllAdminTicketsService, createRazorPayService, verifyRazorpayPaymentService } from "./ticket.service.js";
 
 export const createTicketController = async (req, res) => {
   try {
@@ -98,3 +98,16 @@ export const createRazorpayController = async (req, res) => {
     });
   }
 };
+export const verifyRazorpayConroller=async(req,res)=>{
+  try {
+    const response = await verifyRazorpayPaymentService(req.body)
+    res.send(response)
+  } catch (error) {
+     console.log("RAZORPAY ERROR:", error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+    
+  }
+}

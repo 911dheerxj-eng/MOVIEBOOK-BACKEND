@@ -2,11 +2,7 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import { User } from "./auth.model.js"
-
-// Random token banane aur uska SHA-256 hash banane ke liye
 import crypto from "crypto";
-
-// Gmail se reset email bhejne ke liye
 import nodemailer from "nodemailer";
 
 
@@ -66,41 +62,27 @@ export const getUsersService = async () => {
 
 
 export const forgotPasswordService = async (email) => {
-  // User ko email se dhundo
   const user = await User.findOne({ email });
-
-  // Email database mein nahi hai toh bhi generic response dena
   if (!user) {
     return {
       message: "If this email is registered, a reset link has been sent.",
     };
   }
-
-  // Ek random 32-byte token banao
   const resetToken = crypto.randomBytes(32).toString("hex");
-
-  // Original token ka SHA-256 hash banao
   const hashedToken = crypto
     .createHash("sha256")
     .update(resetToken)
     .digest("hex");
-
-  // Current time se 15 minutes aage ka expiry time banao
   const expiryTime = Date.now() + 15 * 60 * 1000;
-
-  // Database mein sirf hashed token aur expiry save karo
   await User.findByIdAndUpdate(user._id, {
     resetPasswordToken: hashedToken,
     resetPasswordExpires: expiryTime,
   });
 
-  // Email credentials check karo — agar set nahi hain toh error dena
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
     console.error("EMAIL_USER or EMAIL_PASS not configured in environment variables");
     throw new Error("Email service is not configured. Please contact support.");
   }
-
-  // Gmail ke through email bhejne ka setup
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -109,12 +91,10 @@ export const forgotPasswordService = async (email) => {
     },
   });
 
-  // Frontend ka reset password URL banao
   const frontendURL = (process.env.FRONTEND_URL || "https://mbf-gamma.vercel.app").replace(/\/$/, "");
   const resetLink = `${frontendURL}/reset-password?token=${resetToken}`;
 
   try {
-    // User ko reset link email karo
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: user.email,
@@ -135,17 +115,12 @@ export const forgotPasswordService = async (email) => {
       `,
     });
   } catch (error) {
-    // Email fail ho toh purana reset token hata do
     await User.findByIdAndUpdate(user._id, {
       resetPasswordToken: null,
       resetPasswordExpires: null,
     });
-
-    // Error controller tak bhejo
     throw error;
   }
-
-  // Success response return karo
   return {
     message: "If this email is registered, a reset link has been sent.",
   };
@@ -155,34 +130,25 @@ export const forgotPasswordService = async (email) => {
 
 
 export const resetPasswordService = async (token, newPassword) => {
-  // Email wale original token ka SHA-256 hash banao
   const hashedToken = crypto
     .createHash("sha256")
     .update(token)
     .digest("hex");
 
-  // Database mein valid aur unexpired token wala user dhundo
   const user = await User.findOne({
     resetPasswordToken: hashedToken,
     resetPasswordExpires: { $gt: new Date() },
   });
 
-  // Token galat hai ya expire ho chuka hai
   if (!user) {
     return null;
   }
-
-  // New password ko bcrypt se sirf EK baar hash karo
   const encryptedPassword = await bcrypt.hash(newPassword, 10);
-
-  // Password update karo aur reset token delete karo
   await User.findByIdAndUpdate(user._id, {
     password: encryptedPassword,
     resetPasswordToken: null,
     resetPasswordExpires: null,
   });
-
-  // Password successfully update ho gaya
   return {
     message: "Password reset successfully",
   };

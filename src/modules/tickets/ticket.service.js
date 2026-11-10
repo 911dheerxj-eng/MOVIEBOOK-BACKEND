@@ -37,38 +37,57 @@ export const cancelTicketService = async (ticketId) => {
 
 
 export const getAllTicketsService = async (userId) => {
-const tickets = await Tickets.find({
-    userId: new Types.ObjectId(userId)
-}).populate("movieId");
-return tickets;
+    const tickets = await Tickets.find({
+        userId: new Types.ObjectId(userId)
+    }).populate("movieId");
+    return tickets;
 };
 
 
 
 
- export const getAllAdminTicketsService = async () => {
-  const tickets = await Tickets.find()
-    .populate("userId", "name email")
-    .populate("movieId", "name");
+export const getAllAdminTicketsService = async () => {
+    const tickets = await Tickets.find()
+        .populate("userId", "name email")
+        .populate("movieId", "name");
 
-  return tickets;
+    return tickets;
 };
 
 
 
 
 export const createRazorPayService = async (data) => {
-  const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET,
-  });
+    const razorpay = new Razorpay({
+        key_id: process.env.RAZORPAY_KEY_ID,
+        key_secret: process.env.RAZORPAY_KEY_SECRET,
+    });
 
-  const options = {
-    amount: Math.round(data.amount * 100), // paise mein convert karo
-    currency: data.currency || "INR",
-    receipt: `receipt_${Date.now()}`,
-  };
+    const options = {
+        amount: Math.round(data.amount * 100), // paise mein convert karo
+        currency: data.currency || "INR",
+        receipt: `receipt_${Date.now()}`,
+    };
 
-  const order = await razorpay.orders.create(options);
-  return order;
+    const order = await razorpay.orders.create(options);
+    return order;
 };
+
+export const verifyRazorpayPaymentService = async (data) => {
+      const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = data;
+
+  const sign = razorpay_order_id + "|" + razorpay_payment_id;
+  const expectedSign = crypto
+    .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+    .update(sign.toString())
+    .digest("hex");
+
+  if (razorpay_signature === expectedSign) {
+    console.log("Payement Verified");
+    
+    return true;
+  } else {
+    console.log("Payement failed");
+return false
+  }
+ }
