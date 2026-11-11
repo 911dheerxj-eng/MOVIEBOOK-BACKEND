@@ -13,7 +13,8 @@ export const createTicketService = async (data) => {
         showTime: data.showTime,
         movieId: data.movieId,
         userId: data.userId,
-        status: "pending"
+        razorpay_order_id:data.razorpay_order_id,
+        status: "pending",
     };
     const result = await Tickets.create(ticket);
     return result;
