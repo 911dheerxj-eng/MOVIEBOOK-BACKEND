@@ -68,7 +68,7 @@ export const createRazorPayService = async (data) => {
         receipt: `receipt_${Date.now()}`,
     };
     const order = await razorpay.orders.create(options);
-    createTicketService({...data,razorpay_order_id:order.id})
+   await createTicketService({...data,razorpay_order_id:order.id})
     return order;
 };
 
