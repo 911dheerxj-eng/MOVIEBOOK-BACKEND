@@ -102,16 +102,13 @@ export const createRazorpayController = async (req, res) => {
 export const verifyRazorpayConroller=async(req,res)=>{
   try {
      const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET;
-
     // Get Razorpay signature
     const signature = req.headers["x-razorpay-signature"];
-
     if (!webhookSecret || !signature ) {
       return res.status(400).json({
         message: "Invalid webhook request",
       });
-    }
-
+    } 
     // Generate expected signature
     const expectedSignature = crypto
       .createHmac("sha256", webhookSecret)
@@ -121,8 +118,7 @@ export const verifyRazorpayConroller=async(req,res)=>{
     // Compare signatures safely
     const receivedSignature = Buffer.from(signature, "hex");
 
-    if (
-      receivedSignature.length !== expectedSignature.length ||
+    if ( receivedSignature.length !== expectedSignature.length ||
       !crypto.timingSafeEqual(receivedSignature, expectedSignature)
     ) {
       return res.status(400).json({
@@ -133,9 +129,9 @@ export const verifyRazorpayConroller=async(req,res)=>{
 
     // Parse body only after signature verification
     
-
+    
     // console.log("Razorpay Webhook Event:", req.body.event);
-    // const response = await verifyRazorpayPaymentService(req.body)
+     verifyRazorpayPaymentService(req.body)
     res.send({status:true})
   } catch (error) {
      console.log("RAZORPAY ERROR:", error);

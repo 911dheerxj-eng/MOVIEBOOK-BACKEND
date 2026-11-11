@@ -62,22 +62,63 @@ export const createRazorPayService = async (data) => {
         key_id: process.env.RAZORPAY_KEY_ID,
         key_secret: process.env.RAZORPAY_KEY_SECRET,
     });
-
     const options = {
         amount: Math.round(data.amount * 100), // paise mein convert karo
         currency: data.currency || "INR",
         receipt: `receipt_${Date.now()}`,
     };
-
     const order = await razorpay.orders.create(options);
     return order;
 };
 
-export const verifyRazorpayPaymentService = async (data) => {
-   
-   
-   
-    
 
-  
- }
+
+
+export const verifyRazorpayPaymentService = async (data) => {
+    
+    try {
+        // 6. Handle different events
+        switch (data.event) {
+
+            case "payment.captured":
+                console.log("Payment successfull");
+                const payment =
+                    data.payload.payment.entity;
+                console.log("Payment ID:", payment.id);
+                console.log("Amount:", payment.amount);
+                console.log("Status:", payment.status);
+
+                // Update payment status in database
+                break;
+
+            case "payment.failed":
+                console.log("Payment failed");
+
+                const failedPayment =
+                    data.payload.payment.entity;
+
+                console.log("Payment ID:", failedPayment.id);
+
+                // Update payment status in database
+                break;
+
+           
+            default:
+                console.log("Unhandled event:", data.event);
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Webhook received successfully",
+        });
+
+    } catch (error) {
+        console.error("Webhook Error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Webhook processing failed",
+        });
+    }
+}
+
