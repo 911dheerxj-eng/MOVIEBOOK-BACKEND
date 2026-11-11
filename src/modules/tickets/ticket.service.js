@@ -93,7 +93,9 @@ export const verifyRazorpayPaymentService = async (data) => {
                 await Tickets.findOneAndUpdate({
                     razorpay_order_id:payment.order_id
                 },{
-                    status:"booked"
+                    $set:{
+                        status:"booked"
+                    }
                 })
 
                 // Update payment status in database
