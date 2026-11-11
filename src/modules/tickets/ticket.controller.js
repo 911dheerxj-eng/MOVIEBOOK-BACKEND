@@ -89,7 +89,7 @@ export const getAllAdminTicketsController = async (req, res) => {
 
 export const createRazorpayController = async (req, res) => {
   try {
-    const response = await createRazorPayService(req.body);
+    const response = await createRazorPayService({...req.body, userId: req.userId,});
     res.json(response);
   } catch (error) {
     console.log("RAZORPAY ERROR:", error);

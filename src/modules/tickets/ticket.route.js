@@ -10,5 +10,5 @@ ticketRouter.post("/", validateUser, createTicketController)
 ticketRouter.get("/all", validateUser, getAllTicketsController)
 ticketRouter.delete("/:ticketId", cancelTicketController)
 ticketRouter.get("/admin/all", validateUser, getAllAdminTicketsController);
-ticketRouter.post("/create-razorpay-order", createRazorpayController);
+ticketRouter.post("/create-razorpay-order", validateUser,createRazorpayController);
 ticketRouter.post("/verify-payment", verifyRazorpayConroller);
