@@ -107,10 +107,7 @@ export const verifyRazorpayPaymentService = async (data) => {
                 console.log("Unhandled event:", data.event);
         }
 
-        return res.status(200).json({
-            success: true,
-            message: "Webhook received successfully",
-        });
+      
 
     } catch (error) {
         console.error("Webhook Error:", error);
