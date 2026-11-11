@@ -13,7 +13,7 @@ export const createTicketService = async (data) => {
         showTime: data.showTime,
         movieId: data.movieId,
         userId: data.userId,
-        status: "booked"
+        status: "pending"
     };
     const result = await Tickets.create(ticket);
     return result;
@@ -68,6 +68,7 @@ export const createRazorPayService = async (data) => {
         receipt: `receipt_${Date.now()}`,
     };
     const order = await razorpay.orders.create(options);
+    createTicketService({...data,razorpay_order_id:order.id})
     return order;
 };
 
@@ -88,6 +89,11 @@ export const verifyRazorpayPaymentService = async (data) => {
                 console.log("Order ID:", payment.order_id);
                 console.log("Amount:", payment.amount);
                 console.log("Status:", payment.status);
+                await Tickets.findOneAndUpdate({
+                    razorpay_order_id:payment.order_id
+                },{
+                    status:"booked"
+                })
 
                 // Update payment status in database
                 break;

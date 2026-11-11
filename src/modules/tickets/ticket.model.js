@@ -33,9 +33,15 @@ const ticketSchema = new mongoose.Schema({
         ref: "user",
         required: true
     },
+    razorpay_order_id:{
+        type:String,
+        required:false,
+        default:null,
+    },
     status: {
         type: String,
-        default: "booked"
+        enum:["pending","booked"],
+        default: "pending"
     }
 }, {
     timestamps: true
