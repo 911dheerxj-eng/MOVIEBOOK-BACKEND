@@ -85,6 +85,7 @@ export const verifyRazorpayPaymentService = async (data) => {
                 const payment =
                     data.payload.payment.entity;
                 console.log("Payment ID:", payment.id);
+                console.log("Order ID:", payment.order_id);
                 console.log("Amount:", payment.amount);
                 console.log("Status:", payment.status);
 
