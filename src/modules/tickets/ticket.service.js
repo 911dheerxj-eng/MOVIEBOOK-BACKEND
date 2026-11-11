@@ -129,3 +129,13 @@ export const verifyRazorpayPaymentService = async (data) => {
     }
 }
 
+
+export const checkStatusService = async(orderId)=>{
+    const ticket = await Tickets.findOne({razorpay_order_id:orderId})
+    if(ticket.status==="booked"){
+        return true;
+    }
+    else{
+        return false
+    }
+}

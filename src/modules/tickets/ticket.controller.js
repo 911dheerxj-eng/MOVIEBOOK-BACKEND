@@ -1,4 +1,4 @@
-import { createTicketService, cancelTicketService, getAllTicketsService, getAllAdminTicketsService, createRazorPayService, verifyRazorpayPaymentService } from "./ticket.service.js";
+import { createTicketService, cancelTicketService, getAllTicketsService, getAllAdminTicketsService, createRazorPayService, verifyRazorpayPaymentService, checkStatusService } from "./ticket.service.js";
 
 import crypto from "crypto"
 export const createTicketController = async (req, res) => {
@@ -141,4 +141,19 @@ export const verifyRazorpayConroller=async(req,res)=>{
     });
     
   }
+}
+
+export const checkStatusController=async(req,res)=>{
+  const response = await checkStatusService(req.body.razorpay_order_id)
+  if(response){
+    res.send({
+      message:"Movie booked success"
+    })
+  }
+  else{
+    res.send({
+      message:"Movie not booked"
+    })
+  }
+
 }
