@@ -1,5 +1,5 @@
 import { validateUser } from "../../middlewares/auth.middleware.js";
-import { cancelTicketController, createTicketController, getAllTicketsController, getAllAdminTicketsController, createRazorpayController, verifyRazorpayConroller } from "./ticket.controller.js";
+import { cancelTicketController, createTicketController, getAllTicketsController, getAllAdminTicketsController, createRazorpayController, verifyRazorpayConroller, checkStatusController } from "./ticket.controller.js";
 import express from "express";
 
 
@@ -12,4 +12,4 @@ ticketRouter.delete("/:ticketId", cancelTicketController)
 ticketRouter.get("/admin/all", validateUser, getAllAdminTicketsController);
 ticketRouter.post("/create-razorpay-order", validateUser,createRazorpayController);
 ticketRouter.post("/verify-payment", verifyRazorpayConroller);
-ticketRouter.post("/check-status", verifyRazorpayConroller);
+ticketRouter.post("/check-status", checkStatusController);
